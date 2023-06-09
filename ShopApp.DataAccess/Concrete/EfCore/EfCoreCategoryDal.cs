@@ -13,6 +13,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
     {
         public void DeleteFromCategory(int categoryId, int productId)
         {
+
             using (var context = new ShopContext())
             {
                 var cmd = @"delete from ProductCategory where ProductId= @p0 And CategoryId = @p1";

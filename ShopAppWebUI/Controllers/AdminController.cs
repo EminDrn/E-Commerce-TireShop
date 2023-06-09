@@ -29,23 +29,33 @@ namespace ShopAppWebUI.Controllers
         [HttpGet]
         public IActionResult CreateProduct()
         {
-            return View();
+            return View(new ProductModel());
         }
 
         [HttpPost]
         public IActionResult CreateProduct(ProductModel model)
         {
-            var entity = new Product()
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Price = model.Price,
-                Description = model.Description,
-                ImageUrl = model.ImageUrl
-            };
+                var entity = new Product()
+                {
+                    Name = model.Name,
+                    Price = model.Price,
+                    Description = model.Description,
+                    ImageUrl = model.ImageUrl
+                };
 
-            _productService.Create(entity);
+                if (_productService.Create(entity))
+                {
+                    return RedirectToAction("ProductList");
+                }
+                ViewBag.ErrorMessage = _productService.ErrorMessage;
+                return View(model);
 
-            return RedirectToAction("ProductList");
+            }
+
+            return View(model);
+
         }
 
         public IActionResult EditProduct(int? id)
@@ -70,12 +80,13 @@ namespace ShopAppWebUI.Controllers
                 ImageUrl = entity.ImageUrl,
                 SelectedCategories = entity.ProductCategories.Select(i => i.Category).ToList()
             };
+
             ViewBag.Categories = _categoryService.GetAll();
 
             return View(model);
         }
         [HttpPost]
-        public IActionResult EditProduct(ProductModel model ,int[] categoryIds)
+        public IActionResult EditProduct(ProductModel model, int[] categoryIds)
         {
             var entity = _productService.GetById(model.Id);
 
@@ -139,7 +150,7 @@ namespace ShopAppWebUI.Controllers
             {
                 Id = entity.Id,
                 Name = entity.Name,
-                Products =entity.ProductCategories.Select(p=>p.Product).ToList()
+                Products = entity.ProductCategories.Select(p => p.Product).ToList()
             });
         }
         [HttpPost]
@@ -169,11 +180,12 @@ namespace ShopAppWebUI.Controllers
 
             return RedirectToAction("CategoryList");
         }
+
         [HttpPost]
-        public IActionResult DeleteFromCategory(int categoryId , int productId)
+        public IActionResult DeleteFromCategory(int categoryId, int productId)
         {
             _categoryService.DeleteFromCategory(categoryId, productId);
-            return Redirect("/admin/editcategory/" +categoryId);
+            return Redirect("/admin/editcategory/" + categoryId);
         }
     }
 }

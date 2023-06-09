@@ -12,13 +12,21 @@ namespace ShopApp.Business.Concrete
     public class ProductManager : IProductService
     {
         private IProductDal _productDal;
+
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
         }
-        public void Create(Product entity)
+
+
+        public bool Create(Product entity)
         {
-            _productDal.Create(entity);
+            if (Validate(entity))
+            {
+                _productDal.Create(entity);
+                return true;
+            }
+            return false;
         }
 
         public void Delete(Product entity)
@@ -51,9 +59,9 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetProductDetails(id);
         }
 
-        public List<Product> GetProductsByCategory(string category ,int page , int pageSize)
+        public List<Product> GetProductsByCategory(string category, int page, int pageSize)
         {
-            return _productDal.GetProductsByCategory(category , page , pageSize);
+            return _productDal.GetProductsByCategory(category, page, pageSize);
         }
 
         public void Update(Product entity)
@@ -64,6 +72,21 @@ namespace ShopApp.Business.Concrete
         public void Update(Product entity, int[] categoryIds)
         {
             _productDal.Update(entity, categoryIds);
+        }
+
+        public string ErrorMessage { get; set; }
+
+        public bool Validate(Product entity)
+        {
+            var isValid = true;
+
+            if (string.IsNullOrEmpty(entity.Name))
+            {
+                ErrorMessage += "ürün ismi girmelisiniz";
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }
