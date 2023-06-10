@@ -46,7 +46,7 @@ namespace ShopAppWebUI.Controllers
             _cartService.AddToCart(_userManager.GetUserId(User), productId, quantity);
             return RedirectToAction("Index");
         }
-        [HttpPost]
-        public IActionResult DeleteFormCart()
+        
+        
     }
 }
