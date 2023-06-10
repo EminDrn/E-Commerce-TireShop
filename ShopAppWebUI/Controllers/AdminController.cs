@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
 using ShopApp.Entities;
@@ -9,6 +12,7 @@ using ShopAppWebUI.Models;
 
 namespace ShopAppWebUI.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -86,8 +90,12 @@ namespace ShopAppWebUI.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult EditProduct(ProductModel model, int[] categoryIds)
+        public async Task<IActionResult> EditProduct(ProductModel model, int[] categoryIds , IFormFile file)
         {
+            if (ModelState.IsValid)
+            {
+
+            
             var entity = _productService.GetById(model.Id);
 
             if (entity == null)
@@ -97,12 +105,25 @@ namespace ShopAppWebUI.Controllers
 
             entity.Name = model.Name;
             entity.Description = model.Description;
-            entity.ImageUrl = model.ImageUrl;
             entity.Price = model.Price;
+
+                if (file != null)
+                {
+                    entity.ImageUrl = file.FileName;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", file.FileName);
+                    using(var stream =  new FileStream(path , FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
 
             _productService.Update(entity, categoryIds);
 
             return RedirectToAction("ProductList");
+            }
+            ViewBag.Categories = _categoryService.GetAll();
+
+            return View(model);
         }
 
         [HttpPost]
