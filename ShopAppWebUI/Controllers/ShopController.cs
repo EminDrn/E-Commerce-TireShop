@@ -38,7 +38,7 @@ namespace ShopAppWebUI.Controllers
         //products/telefon?page=2
         public IActionResult List(string category, int page = 1)
         {
-            const int pageSize = 3;
+            const int pageSize = 6;
             return View(new ProductListModel()
             {
                 Products = _productService.GetProductsByCategory(category, page, pageSize),

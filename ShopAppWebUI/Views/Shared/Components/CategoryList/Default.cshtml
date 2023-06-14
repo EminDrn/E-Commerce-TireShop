@@ -7,7 +7,7 @@
         <a asp-controller="Shop"
            asp-action="List"
            asp-route-category="@item.Name.ToLower()"
-           class="list-group-item list-group-item-action @( Model.SelectedCategory==item.Name.ToLower()?"active":"")">
+           class="list-group-item list-group-item-action @( Model.SelectedCategory==item.Name.ToLower()?"active bg-danger":"")">
             @item.Name
         </a>
         }

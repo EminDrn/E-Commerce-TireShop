@@ -3,93 +3,104 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Shopping Cart</h1>
+<h1 class="text-center">Alışveriş Sepeti</h1>
 
 <div class="row mt-5">
     <div class="col-md-8">
         <div class="text-left">
-            <h4>Cart Items</h4>
+            <h4>Sepet Öğeleri</h4>
         </div>
 
         @if (Model.CartItems.Count > 0)
         {
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="card cart-items">
+                <ul class="list-group list-group-flush">
                     @foreach (var item in Model.CartItems)
                     {
-                        <tr>
-                            <td>
-                                <img src="~/img/@item.ImageUrl" width="80" />
-                            </td>
-                            <td>@item.Name</td>
-                            <td>@item.Price.ToString("c")</td>
-                            <td>@item.Quantity</td>
-                            <td>@((item.Quantity * item.Price).ToString("c"))</td>
-                            <td>
-                                <form asp-controller="Cart" asp-action="DeleteFromCart" method="post">
-                                    <input type="hidden" name="productId" value="@item.ProductId" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-times fa-fw"></i>
-                                    </button>
-                                </form>
-
-                            </td>
-                        </tr>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="~/img/@item.ImageUrl" width="100" alt="@item.Name" />
+                                </div>
+                                <div class="col-md-9">
+                                    <h5 class="item-name">@item.Name</h5>
+                                    <p class="item-price"><i class="fas fa-lira-sign"></i> @item.Price.ToString("c")</p>
+                                    <div class="item-quantity">
+                                        <button class="quantity-btn" data-action="decrease">-</button>
+                                        <input type="number" class="quantity-input" value="@item.Quantity" min="1" readonly>
+                                        <button class="quantity-btn" data-action="increase">+</button>
+                                    </div>
+                                    <p class="item-total"><strong>Toplam:</strong> @((item.Quantity * item.Price).ToString("c"))</p>
+                                    <form asp-controller="Cart" asp-action="DeleteFromCart" method="post">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <button type="submit" class="btn btn-link delete-btn"><i class="fas fa-trash-alt"></i> Sil</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
                     }
-                </tbody>
-
-            </table>
+                </ul>
+            </div>
         }
         else
         {
             <div class="alert alert-warning">
-                No Product in Cart!
+                Sepette Ürün Yok!
             </div>
         }
     </div>
     <div class="col-md-4">
-
         @if (Model.CartItems.Count > 0)
         {
             <div class="text-left">
-                <h4>Cart Summary</h4>
+                <h4>Sepet Özeti</h4>
             </div>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th>Cart Total</th>
-                        <td>@Model.TotalPrice().ToString("c")</td>
-                    </tr>
-                    <tr>
-                        <th>Shipping</th>
-                        <td>Free</td>
-                    </tr>
-                    <tr>
-                        <th>Order Total</th>
-                        <td>@Model.TotalPrice().ToString("c")</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="text-center">
-                <a href="/" class="btn btn-primary">
-                    <i class="fa fa-arrow-circle-left fa-fw"></i> Continue Shopping
-                </a>
-                <a href="/checkout" class="btn btn-primary">
-                    Checkout <i class="fa fa-arrow-circle-right fa-fw"></i>
-                </a>
+            <div class="card cart-summary">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="summary-label">Sepet Toplamı</span>
+                        <span class="summary-value">@Model.TotalPrice().ToString("c")</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="summary-label">Nakliye</span>
+                        <span class="summary-value">Ücretsiz</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="summary-label">Sipariş Toplamı</span>
+                        <span class="summary-value">@Model.TotalPrice().ToString("c")</span>
+                    </li>
+                </ul>
+                <div class="text-center mt-3">
+                    <a href="/" class="btn btn-primary btn-continue-shopping">
+                        <i class="fas fa-arrow-left"></i> Alışverişe Devam Et
+                    </a>
+                    <a href="/checkout" class="btn btn-primary btn-checkout">
+                        Çıkış Yap <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
-
         }
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        // Quantity buttons
+        var quantityBtns = document.querySelectorAll('.quantity-btn');
+        quantityBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var action = this.dataset.action;
+                var input = this.parentNode.querySelector('.quantity-input');
+                var currentValue = parseInt(input.value);
+
+                if (action === 'increase') {
+                    input.value = currentValue + 1;
+                } else if (action === 'decrease') {
+                    if (currentValue > 1) {
+                        input.value = currentValue - 1;
+                    }
+                }
+            });
+        });
+    </script>
+}

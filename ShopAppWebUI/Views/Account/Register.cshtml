@@ -7,67 +7,51 @@
     <script src="~/modules/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 }
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
 
-<h1>Register User</h1>
-<hr />
+            <h1 class="text-center mb-4">Register User</h1>
+            <hr />
 
-<div class="row">
-    <div class="col-md-8">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+            }
 
-        @if (ViewBag.ErrorMessage != null)
-        {
-            <div class="text-danger">@ViewBag.ErrorMessage</div>
-        }
-
-        <form asp-controller="Account" asp-action="Register" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group row">
-                <label asp-for="FullName" class="col-md-2 col-form-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="FullName" value="@Model.FullName" class="form-control" />
+            <form asp-controller="Account" asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="inputFullName">Full Name</label>
+                    <input type="text" id="inputFullName" name="FullName" value="@Model.FullName" class="form-control" placeholder="Enter your full name" required>
                     <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="Username" class="col-md-2 col-form-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="Username" value="@Model.Username" class="form-control" />
+                <div class="form-group">
+                    <label for="inputUsername">Username</label>
+                    <input type="text" id="inputUsername" name="Username" value="@Model.Username" class="form-control" placeholder="Choose a username" required>
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="Email" class="col-md-2 col-form-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="Email" value="@Model.Email" class="form-control" />
+                <div class="form-group">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" id="inputEmail" name="Email" value="@Model.Email" class="form-control" placeholder="Enter your email" required>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="Password" class="col-md-2 col-form-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="Password" value="@Model.Password" class="form-control" />
+                <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" id="inputPassword" name="Password" value="@Model.Password" class="form-control" placeholder="Choose a password" required>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="RePassword" class="col-md-2 col-form-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RePassword" value="@Model.RePassword" class="form-control" />
+                <div class="form-group">
+                    <label for="inputRePassword">Confirm Password</label>
+                    <input type="password" id="inputRePassword" name="RePassword" value="@Model.RePassword" class="form-control" placeholder="Confirm your password" required>
                     <span asp-validation-for="RePassword" class="text-danger"></span>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-md-10 offset-md-2">
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-danger btn-block">Create User</button>
                 </div>
-            </div>
+            </form>
 
-        </form>
-
+        </div>
     </div>
 </div>
 

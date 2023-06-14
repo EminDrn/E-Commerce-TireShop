@@ -3,51 +3,50 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Admin Products</h1>
-<hr />
+<div class="container">
+    <h1 class="text-center">Admin Products</h1>
+    <hr />
 
-@if (Model.Products.Count() > 0)
-{
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <td style="width:30px;">Id</td>
-                <td style="width:100px;">Image</td>
-                <td>Name</td>
-                <td style="width:12px;">Price</td>
-                <td style="width:150px;"></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Products)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>
-                        <img src="~/img/@item.ImageUrl" width="80" />
-                    </td>
-                    <td>@item.Name</td>
-                    <td>@item.Price</td>
-                    <td>
-                        <a class="btn btn-primary btn-sm mr-2" href="/admin/products/@item.Id">Edit</a>
-                        <form action="/admin/deleteproduct" method="post" style="display:inline;">
-                            <input type="hidden" name="productId" value="@item.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>       
-                    </td>
-                </tr>
-            }
-
-        </tbody>
-
-    </table>
-}
-else
-{
-    <div class="alert alert-warning">
-        <h4>No Products</h4>
-    </div>
-}
-
-
+    @if (Model.Products.Count() > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width: 30px;">Id</th>
+                        <th style="width: 100px;">Resim</th>
+                        <th>İsimi</th>
+                        <th style="width: 100px;">Fiyat</th>
+                        <th style="width: 150px;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Products)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>
+                                <img src="~/img/@item.ImageUrl" width="80" />
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Price</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm mr-2" href="/admin/products/@item.Id">Edit</a>
+                                <form action="/admin/deleteproduct" method="post" style="display:inline;">
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            <h4>No Products</h4>
+        </div>
+    }
+</div>
